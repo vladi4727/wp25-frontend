@@ -40,6 +40,15 @@
               Matches
             </RouterLink>
           </li>
+          <li>
+            <RouterLink
+              to="/preferences"
+              class="text-sm text-white/80 hover:text-white transition"
+              :class="isActive('/preferences')"
+            >
+              Preferences
+            </RouterLink>
+          </li>
         </ul>
 
         <!-- Right actions -->

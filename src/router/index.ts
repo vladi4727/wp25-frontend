@@ -34,6 +34,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/preferences',
+      name: 'preferences',
+      component: () => import('../views/PreferencesView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/chat/:id',
       name: 'chat',
       component: () => import('../views/ChatView.vue'), // lazy-loaded
