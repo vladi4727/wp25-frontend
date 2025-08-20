@@ -19,27 +19,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import SwipeCarouselCard from '@/components/SwipeCarouselCard.vue'
 import axios from 'axios'
+import { useCandidates } from '@/stores/candidates'
 
-const candidates = ref([] as any[])
+const store = useCandidates()
+const candidates = computed(() => store.list)
 
-// Load once or when needed
-async function fetchCandidates() {
-  const { data } = await axios.get('/api/users/candidates')
-  candidates.value = data || []
-}
-fetchCandidates()
+onMounted(() => {
+  if (!store.list.length) {
+    store.fetch()
+  }
+})
 
 async function onSwipe({ direction, userId }: { direction: 'left' | 'right'; userId: string }) {
   try {
-    await axios.post('/api/users/swipes', { targetId: userId, direction })
+    const API_BASE = import.meta.env.VITE_API_BASE
+    await axios.post(`${API_BASE}/users/swipes`, { targetId: userId, direction })
   } catch (e) {
     // handle error (optional rollback)
   } finally {
     // remove the swiped user from stack
-    candidates.value = candidates.value.filter((x) => x.userId !== userId)
+    store.remove(userId)
   }
 }
 </script>
