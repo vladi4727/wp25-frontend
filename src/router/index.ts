@@ -5,6 +5,7 @@ import { useAuth } from '@/stores/auth'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // Public routes
     {
       path: '/',
       name: 'login',
@@ -15,6 +16,8 @@ const router = createRouter({
       name: 'createaccount',
       component: () => import('../views/CreateAccountView.vue'), // lazy-loaded
     },
+
+    // Authenticated routes
     {
       path: '/createprofile',
       name: 'createprofile',
@@ -34,16 +37,25 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/preferences',
+      name: 'preferences',
+      component: () => import('../views/PreferencesView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/chat/:id',
       name: 'chat',
       component: () => import('../views/ChatView.vue'), // lazy-loaded
-      props: true, // allows ChatView to accept prop 'id' if desired
+      props: true, // allows ChatView to accept prop 'id'
       meta: { requiresAuth: true },
     },
+
+    // Fallback
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
 })
 
+// Basic auth guard: redirect unauthenticated users to login
 router.beforeEach((to, from, next) => {
   const auth = useAuth()
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)

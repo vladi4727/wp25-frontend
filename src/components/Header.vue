@@ -1,4 +1,5 @@
 <template>
+  <!-- Site-wide navigation bar -->
   <header class="w-full">
     <div class="mx-auto mt-3 px-4">
       <nav
@@ -21,6 +22,7 @@
         </div>
 
         <!-- Center nav (desktop) -->
+        <!-- Desktop navigation links -->
         <ul class="hidden items-center gap-6 md:flex">
           <li>
             <RouterLink
@@ -40,11 +42,20 @@
               Matches
             </RouterLink>
           </li>
+          <li>
+            <RouterLink
+              to="/preferences"
+              class="text-sm text-white/80 hover:text-white transition"
+              :class="isActive('/preferences')"
+            >
+              Preferences
+            </RouterLink>
+          </li>
         </ul>
 
         <!-- Right actions -->
+        <!-- User actions: logout and profile link -->
         <div class="flex items-center gap-2">
-          <!-- Avatar -->
           <button class="text-white" @click="onLogout">Logout</button>
           <RouterLink to="/createprofile" class="flex items-center gap-2" title="Your profile">
             <img
@@ -60,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 
 const router = useRouter()
@@ -71,8 +82,6 @@ const route = useRoute()
 const props = defineProps<{ avatarUrl?: string }>()
 const defaultAvatar =
   'https://api.dicebear.com/7.x/initials/svg?seed=T&backgroundType=gradientLinear&backgroundColor=f472b6,8b5cf6'
-const open = ref(false)
-
 function onLogout() {
   localStorage.removeItem('jwt')
   localStorage.removeItem('userId')
@@ -83,9 +92,11 @@ function isActive(path: string) {
   return route.path === path ? 'text-white' : ''
 }
 
-// Close menu on outside click or Escape
+// Close potential menus on Escape keypress (future use)
 function handleKey(e: KeyboardEvent) {
-  if (e.key === 'Escape') open.value = false
+  if (e.key === 'Escape') {
+    // placeholder for menu-close logic
+  }
 }
 onMounted(() => document.addEventListener('keydown', handleKey))
 onBeforeUnmount(() => document.removeEventListener('keydown', handleKey))
